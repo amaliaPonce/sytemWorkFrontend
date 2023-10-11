@@ -33,7 +33,6 @@ export const AppProvider = ({ children }) => {
     console.log("Usuario cerró sesión.");
   };
 
-  // JSX: Proporciona el contexto y los métodos a los componentes hijos
   return (
     <AppContext.Provider value={{ user, login, logout }}>
       {children}
