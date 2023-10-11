@@ -29,8 +29,6 @@ function LoginComponent() {
     try {
       const data = await loginService({ id, password });
 
-      console.log("Token JWT recibido:", data.token);
-
       if (data.message === "Inicio de sesión exitoso") {
         login({
           userRole: data.userRole,
@@ -47,8 +45,6 @@ function LoginComponent() {
         setError(data.message || "Error al iniciar sesión");
       }
     } catch (error) {
-      console.error("Error en el manejo de la solicitud:", error);
-
       if (error.message.includes("Network Error")) {
         setError(
           "Error de conexión. Por favor, verifica tu conexión a Internet."
@@ -68,11 +64,11 @@ function LoginComponent() {
   };
 
   return (
-    <section className="login-container">
-      <h2 className="login-title">Iniciar Sesión</h2>
+    <div className="p-4 max-w-md mx-auto bg-blue-200 rounded-lg shadow-lg">
+      <h2 className="text-4xl font-bold text-blue-700 mb-4 text-center">Iniciar Sesión</h2>
       <form onSubmit={handleLogin}>
-        <fieldset>
-          <label htmlFor="id">ID:</label>
+        <div className="mb-4">
+          <label htmlFor="id" className="block text-sm font-medium text-gray-700 mb-2">Número de empleado:</label>
           <input
             id="id"
             type="text"
@@ -80,27 +76,32 @@ function LoginComponent() {
             required
             onChange={(e) => setId(e.target.value)}
             autoComplete="username"
-            className="register-input"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
           />
-
-          <label htmlFor="password">Contraseña:</label>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">Contraseña:</label>
           <input
             type="password"
             value={password}
             required
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
-            className="register-input"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
           />
-        </fieldset>
-
-        <button type="submit">
-          {isLoading ? "Cargando..." : "Iniciar Sesión"}
-        </button>
-        {error && <p className={`login-error `}>{error}</p>}
-        {isLoading && <p className={`login-loading `}>Cargando...</p>}
+        </div>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
+            {isLoading ? "Cargando..." : "Iniciar Sesión"}
+          </button>
+        </div>
+        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+        {isLoading && <p className="text-center mt-2">Cargando...</p>}
       </form>
-    </section>
+    </div>
   );
 }
 

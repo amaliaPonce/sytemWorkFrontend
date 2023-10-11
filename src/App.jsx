@@ -1,14 +1,19 @@
 import React from 'react';
 import { BrowserRouter } from "react-router-dom";
 import RoutesApp from './RoutesApp';
-import { AppProvider } from './context/AppContext'; // Importa el AppProvider
+import { AppProvider } from './context/AppContext'; 
+import { CheckInOutProvider } from './context/CheckInOutContext';
 
 function App() {
   return (
     <React.StrictMode>
       <BrowserRouter>
-        <AppProvider> {/* Envuelve tus rutas con AppProvider */}
+        <AppProvider>
+        <CheckInOutProvider>
+
           <RoutesApp />
+          </CheckInOutProvider>,
+
         </AppProvider>
       </BrowserRouter>
     </React.StrictMode>

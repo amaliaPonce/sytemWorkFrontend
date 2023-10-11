@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { registerService } from "../../services/index";
+import "../../index.css";
 
 function RegisterComponent() {
   const [name, setName] = useState("");
@@ -11,60 +12,98 @@ function RegisterComponent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!name || !email || !password) {
+      setError("Todos los campos son obligatorios");
+      setSuccessMessage(null);
+      return;
+    }
+
     try {
       const response = await registerService(name, email, password);
-      console.log("Response from registerService:", response); // Agregar este console.log
-
       setError(null);
 
       if (response && response.id) {
-        console.log("ID from response:", response.id); // Agregar este console.log
-        setSuccessMessage(`Registro exitoso. Su ID es: ${response.id}. Inicia sesión ahora.`);
+        setSuccessMessage(
+          `Registro exitoso. Su número de empleado es: ${response.id}. Inicia sesión ahora.`
+        );
       } else {
         setSuccessMessage("Registro exitoso. Inicia sesión ahora.");
       }
     } catch (error) {
-      setError(error.message);
+      setError(
+        "Hubo un problema al registrar el usuario. Por favor, inténtelo de nuevo."
+      );
       setSuccessMessage(null);
     }
   };
 
   return (
-    <div>
-      <h2>Registro de Usuario</h2>
-      {error && <p>Error: {error}</p>}
-      {successMessage && <p>{successMessage}</p>}
+    <div className="p-4 max-w-md mx-auto bg-blue-200 rounded-lg shadow-lg">
+      <h2 className="text-4xl font-bold text-blue-700 mb-4 text-center">
+        Registro
+      </h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Nombre:</label>
+        <div className="mb-4">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Nombre:
+          </label>
           <input
             type="text"
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
-        <div>
-          <label htmlFor="email">Email:</label>
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Email:
+          </label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
-        <div>
-          <label htmlFor="password">Contraseña:</label>
+        <div className="mb-4">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Contraseña:
+          </label>
           <input
             type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
-        <div>
-          <button type="submit">Registrarse</button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+          >
+            Registrarse
+          </button>
+          
         </div>
+        {error && (
+      <div className="text-red-500 text-center mt-2">{error}</div>
+    )}
+    {successMessage && (
+      <div className="text-blue-700 text-center mt-2">{successMessage}</div>
+    )}
+
       </form>
     </div>
   );

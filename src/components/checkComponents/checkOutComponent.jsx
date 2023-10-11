@@ -1,59 +1,69 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
+import { Button, Alert } from "react-bootstrap";
+import { useCheckInOut } from "../../context/CheckInOutContext";
 import { registerCheckoutService } from "../../services/index";
-import { Button, Spinner, Alert } from "react-bootstrap";
 
-function CheckOutComponent({ userId, userToken }) {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState("");
-  
-    const handleCheckout = async () => {
-      setIsLoading(true);
-      setError("");
-    
-      try {
-         // Obtén el token de sesión desde localStorage
-         const sessionData = JSON.parse(localStorage.getItem("session"));
-         console.log("Datos de sesión:", sessionData); // Agregado para depuración
-         const token = sessionData.token; // Accede al token
-         console.log("Token de sesión:", token); // Agregado para depuración
-     
-         if (!token) {
-           setError("No se encontró el token de sesión en localStorage.");
-           return;
-         }
-     
-         await registerCheckoutService(token); // Pasa el userToken como argumento
-         setSuccessMessage("Check-out exitoso");
-       } catch (error) {
-         setError("Error al registrar el check-in: " + error.message);
-       } finally {
-         setIsLoading(false);
-       }
-     };
-     
-   
-    
-    return (
-      <div>
-        <h2>Registro de Salida</h2>
-        {isLoading ? (
-          <p>Cargando...</p>
-        ) : (
-          <>
-            <Button onClick={handleCheckout} disabled={isLoading}>
-              Registrar Salida
-            </Button>
-            {error && <Alert variant="danger">{error}</Alert>}
-            {successMessage && <Alert variant="success">{successMessage}</Alert>}
-          </>
-        )}
-      </div>
-    );
-  }
-  
+function CheckOutComponent() {
+  const { isCheckedIn, setIsCheckedIn } = useCheckInOut();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  
-  export default CheckOutComponent;
-  
+  const handleCheckout = async () => {
+    setIsLoading(true);
+    setError("");
+    setSuccessMessage("");
+    setShowSuccessMessage(false);
+
+    try {
+      const sessionData = JSON.parse(localStorage.getItem("session"));
+      const token = sessionData?.token;
+
+      if (!token) {
+        setError("No se encontró el token de sesión en localStorage.");
+        return;
+      }
+
+      await registerCheckoutService(token);
+      setSuccessMessage("Check-out exitoso");
+      setIsCheckedIn(false);
+      setShowSuccessMessage(true);
+
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 1000);
+    } catch (error) {
+      setError("Error al registrar el check-out: " + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto bg-white rounded-lg p-6">
+      <h2 className="text-2xl font-semibold mb-4">Registro de Salida</h2>
+      {isLoading ? (
+        <p>Cargando...</p>
+      ) : (
+        <>
+          <Button
+            onClick={handleCheckout}
+            disabled={isLoading || !isCheckedIn}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+          >
+            Registrar Salida
+          </Button>
+          {error && <Alert variant="danger" className="mt-4">{error}</Alert>}
+          {showSuccessMessage && (
+            <Alert variant="success" className="mt-4">
+              {successMessage}
+            </Alert>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+export default CheckOutComponent;
