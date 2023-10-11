@@ -19,11 +19,11 @@ function UserDetailsComponent() {
     
         if (!token) {
           setError("No se encontró el token de sesión en localStorage.");
-          return;
+          retur;n
         }
 
         const responseData = await getUserByIdService(userId, token);
-        console.log("Respuesta de getUserByIdService:", responseData);
+        console.log("Respuesta de ByIdService:", responseData);
 
       
         setUser(responseData[0]); 

@@ -65,7 +65,7 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
       {
         method: "PUT",
         headers: {
-          Authorization: ` ${userToken}`,
+          Authorization: `${userToken}`,
         },
         body: formData,
       }
@@ -73,21 +73,22 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
 
     console.log("updateUserDetailsService: Response Status Code:", response.status);
 
-    const json = await response.json();
-
     if (!response.ok) {
+      const json = await response.json();
       console.error("updateUserDetailsService: Response Error:", json.message);
       throw new Error(json.message);
     }
 
-    console.log("updateUserDetailsService: Data Received:", json.data);
+    const json = await response.json();
+    console.log("updateUserDetailsService: Response Data:", json);
 
-    return json.data;
+    return json;
   } catch (error) {
     console.error("updateUserDetailsService: Error Occurred:", error.message);
     throw new Error("Error al actualizar los detalles del usuario: " + error.message);
   }
 };
+
 
 export const getUserByIdService = async (userId, userToken) => {
   try {
@@ -102,7 +103,6 @@ export const getUserByIdService = async (userId, userToken) => {
       }
     );
 
-    console.log("getUserByIdService: Response Status Code:", response.status);
 
     const json = await response.json();
 
@@ -111,7 +111,6 @@ export const getUserByIdService = async (userId, userToken) => {
       throw new Error(json.message);
     }
 
-    console.log("getUserByIdService: Data Received:", json.data);
 
     return json.data;
   } catch (error) {
@@ -260,3 +259,4 @@ export const listUsersService = async (userToken) => {
     throw new Error("Error al obtener la lista de usuarios: " + error.message);
   }
 };
+
