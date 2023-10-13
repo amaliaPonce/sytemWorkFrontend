@@ -10,20 +10,17 @@ export const AppProvider = ({ children }) => {
     id: null,
   };
 
-  // Usa useState para mantener el estado de la sesión del usuario
   const [user, setUser] = useState(initialSessionData);
 
   useEffect(() => {
     localStorage.setItem("session", JSON.stringify(user));
   }, [user]);
 
-  // Función para iniciar sesión
   const login = (loginUser) => {
     setUser(loginUser);
     console.log("Usuario inició sesión:", loginUser);
   };
 
-  // Función para cerrar sesión
   const logout = () => {
     setUser({
       userRole: null,

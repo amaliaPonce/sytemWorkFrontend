@@ -5,7 +5,8 @@ import CheckOutComponent from '../../components/checkComponents/checkOutComponen
 
 import UserListComponent from '../../components/UserDataComponents/UserListComponent';
 import { useUserList } from "../../hooks/useUserList"; 
-
+import GetFichajesComponent from '../../components/UserDataComponents/GetFichajesComponent';
+import GetEstado from '../../components/UserDataComponents/GetEstado'
 const UserPage = () => {
   const { users, loading, error } = useUserList();
 
@@ -15,6 +16,7 @@ const UserPage = () => {
       <CheckInComponent  />
       <CheckOutComponent />
       <UserListComponent users={users} loading={loading} error={error} />
+      {/* <GetFichajesComponent users={users} loading={loading} error={error} /> */}
     </>
   );
 };

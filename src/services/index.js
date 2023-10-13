@@ -1,3 +1,56 @@
+export const getEstadoService = async (userId, userToken) => {
+  try {
+    if (!userId) {
+      throw new Error("Se requiere un userId");
+    }
+
+    const latestRecord = await getLatestRecordService(userId, userToken);
+
+    if (latestRecord && latestRecord.state) {
+      const estadoMinusculas = latestRecord.state.toLowerCase();
+
+      if (estadoMinusculas === 'inside') {
+        return 'El usuario está dentro';
+      } else if (estadoMinusculas === 'outside') {
+        return 'El usuario está fuera';
+      }
+    }
+
+    return 'Estado desconocido';
+  } catch (error) {
+    throw new Error("Error al obtener el estado actual del empleado: " + error.message);
+  }
+};
+
+export const getLatestRecordService = async (userId, userToken) => {
+  try {
+    if (!userId) {
+      throw new Error("Se requiere un userId");
+    }
+
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/estado?userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `${userToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const json = await response.json();
+      throw new Error(json.message);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw new Error("Error al obtener el registro más reciente: " + error.message);
+  }
+};
+
+
+
 export const getFichajesService = async (userId, userToken) => {
   try {
     const response = await fetch(
@@ -5,7 +58,7 @@ export const getFichajesService = async (userId, userToken) => {
       {
         method: "GET",
         headers: {
-          Authorization: ` ${userToken}`,
+          Authorization: `${userToken}`,
         },
       }
     );

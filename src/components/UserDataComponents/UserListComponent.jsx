@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const UserListComponent = ({ users, loading, error }) => {
   const [showList, setShowList] = useState(false);
+  const [userRole, setUserRole] = useState("");
+  
+  useEffect(() => {
+    const sessionData = JSON.parse(localStorage.getItem("session"));
+    if (sessionData && sessionData.userRole) {
+      setUserRole(sessionData.userRole);
+    }
+  }, []);
 
   if (loading) {
     return <div className="alert alert-info">Cargando usuarios...</div>;
   }
 
+  if (userRole !== "admin") {
+    return null;
+  }
+
   if (error) {
-    return <div className="alert alert-danger">Error: {error}</div>;
+    return null;
   }
 
   return (
@@ -33,11 +45,11 @@ const UserListComponent = ({ users, loading, error }) => {
                 {user.id}
               </Link>{" "}
               <br />
-              <strong className="font-bold">Nombre de Usuario: </strong>{" "}
+              <strong className="font-bold">Nombre de Usuario: </strong>
               {user.username} <br />
               <strong className="font-bold">Nombre: </strong> {user.name} <br />
               <strong className="font-bold">Email: </strong> {user.email} <br />
-              <strong className="font-bold">Rol de Usuario: </strong>{" "}
+              <strong className="font-bold">Rol de Usuario: </strong>
               {user.userRole} <br />
             </li>
           ))}

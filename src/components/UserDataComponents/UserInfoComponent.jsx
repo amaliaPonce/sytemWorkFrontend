@@ -3,15 +3,13 @@ import { useParams } from "react-router-dom";
 import { updateUserDetailsService, deleteUserByIdService } from "../../services/index";
 import useUser from "../../hooks/useUser";
 import { useNavigate } from 'react-router-dom';
-
+import EstadoEmpleado from '../UserDataComponents/GetEstado'
 function UserInfoComponent() {
   const { userId } = useParams();
   const userToken = JSON.parse(localStorage.getItem("userToken"));
 
   const {
     userInfo,
-    error: userError,
-    loading: userLoading,
   } = useUser(userId, userToken);
 
   const [editedUserData, setEditedUserData] = useState({
@@ -119,116 +117,119 @@ function UserInfoComponent() {
   };
 
   return (
-    <section className="h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-xl w-full p-4 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-center">Detalles del Usuario</h2>
-        {isEditing ? (
-          <form className="space-y-4 text-center">
-            <div className="text-center">
-              <img
-                src={`${import.meta.env.VITE_API_URL}/uploads/${editedUserData.profile_photo}`}
-                alt={editedUserData.name}
-                className="w-32 h-32 rounded-full mx-auto mb-4"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="username" className="text-sm font-semibold">Nombre: </label>
+    <>
+      <section className="h-screen flex items-center justify-center bg-gray-100">
+        <div className="max-w-xl w-full p-4 bg-white rounded-lg shadow-lg">
+          <h2 className="text-2xl font-semibold mb-4 text-center">Detalles del Usuario</h2>
+          {isEditing ? (
+            <form className="space-y-4 text-center">
+              <div className="text-center">
+                <img
+                  src={`${import.meta.env.VITE_API_URL}/uploads/${editedUserData.profile_photo}`}
+                  alt={editedUserData.name}
+                  className="w-32 h-32 rounded-full mx-auto mb-4"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="username" className="text-sm font-semibold">Nombre: </label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={editedUserData.username}
+                  onChange={handleFieldChange}
+                  className="form-control border rounded-lg"
+                  placeholder="Nombre de usuario"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="name" className="text-sm font-semibold">Apellido</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={editedUserData.name}
+                  onChange={handleFieldChange}
+                  className="form-control border rounded-lg p-1"
+                  placeholder="Nombre"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="email" className="text-sm font-semibold">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={editedUserData.email}
+                  onChange={handleFieldChange}
+                  className="form-control border rounded-lg p-1"
+                  placeholder="Email"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="userRole" className="text-sm font-semibold">Rol de usuario</label>
+                <input
+                  type="text"
+                  id="userRole"
+                  name="userRole"
+                  value={editedUserData.userRole}
+                  onChange={handleFieldChange}
+                  className="form-control border rounded-lg p-1"
+                  placeholder="Rol de usuario"
+                />
+              </div>
               <input
-                type="text"
-                id="username"
-                name="username"
-                value={editedUserData.username}
-                onChange={handleFieldChange}
-                className="form-control border rounded-lg"
-                placeholder="Nombre de usuario"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="mt-4 p-1"
               />
+              <div className="flex justify-center space-x-4 mt-4">
+                <button
+                  onClick={handleSaveChanges}
+                  className="btn btn-primary flex-grow"
+                  type="submit"
+                >
+                  Guardar Cambios
+                </button>
+                <button onClick={handleToggleEdit} className="btn btn-secondary flex-grow">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="space-y-4 text-center">
+              {userInfo ? (
+                <>
+                  <div className="text-center">
+                    <img
+                      src={`${import.meta.env.VITE_API_URL}/uploads/${editedUserData.profile_photo}`}
+                      alt={editedUserData.name}
+                      className="w-32 h-32 rounded-full mx-auto mb-4"
+                    />
+                  </div>
+                  <p><strong>Nombre:</strong> {editedUserData.username}</p>
+                  <p><strong>Apellido:</strong> {editedUserData.name}</p>
+                  <p><strong>Email:</strong> {editedUserData.email}</p>
+                  <p><strong>Rol de usuario:</strong> {editedUserData.userRole}</p>
+                  <EstadoEmpleado userId={userId} userToken={userToken} />
+                  <div className="flex justify-center space-x-4 mt-4">
+                    <button onClick={handleToggleEdit} className="btn btn-primary flex-grow">
+                      Editar
+                    </button>
+                    <button onClick={handleDeleteUser} className="btn btn-danger flex-grow">
+                      Eliminar Usuario
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p className="text-center">No se encontraron detalles de usuario.</p>
+              )}
             </div>
-            <div className="mb-4">
-              <label htmlFor="name" className="text-sm font-semibold">Apellido</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={editedUserData.name}
-                onChange={handleFieldChange}
-                className="form-control border rounded-lg p-1"
-                placeholder="Nombre"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="email" className="text-sm font-semibold">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={editedUserData.email}
-                onChange={handleFieldChange}
-                className="form-control border rounded-lg p-1"
-                placeholder="Email"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="userRole" className="text-sm font-semibold">Rol de usuario</label>
-              <input
-                type="text"
-                id="userRole"
-                name="userRole"
-                value={editedUserData.userRole}
-                onChange={handleFieldChange}
-                className="form-control border rounded-lg p-1"
-                placeholder="Rol de usuario"
-              />
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="mt-4 p-1"
-            />
-            <div className="flex justify-center space-x-4 mt-4">
-              <button
-                onClick={handleSaveChanges}
-                className="btn btn-primary flex-grow"
-                type="submit"
-              >
-                Guardar Cambios
-              </button>
-              <button onClick={handleToggleEdit} className="btn btn-secondary flex-grow">
-                Cancelar
-              </button>
-            </div>
-          </form>
-        ) : (
-          <div className="space-y-4 text-center">
-            {userInfo ? (
-              <>
-                <div className="text-center">
-                  <img
-                    src={`${import.meta.env.VITE_API_URL}/uploads/${editedUserData.profile_photo}`}
-                    alt={editedUserData.name}
-                    className="w-32 h-32 rounded-full mx-auto mb-4"
-                  />
-                </div>
-                <p><strong>Nombre:</strong> {editedUserData.username}</p>
-                <p><strong>Apellido:</strong> {editedUserData.name}</p>
-                <p><strong>Email:</strong> {editedUserData.email}</p>
-                <p><strong>Rol de usuario:</strong> {editedUserData.userRole}</p>
-                <div className="flex justify-center space-x-4 mt-4">
-                  <button onClick={handleToggleEdit} className="btn btn-primary flex-grow">
-                    Editar
-                  </button>
-                  <button onClick={handleDeleteUser} className="btn btn-danger flex-grow">
-                    Eliminar Usuario
-                  </button>
-                </div>
-              </>
-            ) : (
-              <p className="text-center">No se encontraron detalles de usuario.</p>
-            )}
-          </div>
-        )}
-      </div>
-    </section>
+          )}
+        </div>
+      </section>
+    </>
   );
 }
 

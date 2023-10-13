@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Alert } from "react-bootstrap";
 import { useCheckInOut } from "../../context/CheckInOutContext";
 import { registerCheckoutService } from "../../services/index";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate desde react-router-dom
 
 function CheckOutComponent() {
   const { isCheckedIn, setIsCheckedIn } = useCheckInOut();
@@ -9,6 +10,7 @@ function CheckOutComponent() {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const navigate = useNavigate(); // Utiliza useNavigate para la navegación
 
   const handleCheckout = async () => {
     setIsLoading(true);
@@ -32,13 +34,17 @@ function CheckOutComponent() {
 
       setTimeout(() => {
         setShowSuccessMessage(false);
+
+        if (sessionData?.userRole === "user") {
+          navigate("/");
+        }
       }, 1000);
     } catch (error) {
       setError("Error al registrar el check-out: " + error.message);
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg p-6">
@@ -50,7 +56,7 @@ function CheckOutComponent() {
           <Button
             onClick={handleCheckout}
             disabled={isLoading || !isCheckedIn}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+            className="bg-red-500 hover-bg-red-600 text-white font-semibold py-2 px-4 rounded"
           >
             Registrar Salida
           </Button>

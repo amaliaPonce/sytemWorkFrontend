@@ -1,80 +1,119 @@
 import React, { useState, useEffect } from 'react';
-import { getFichajesService, getUserByIdService } from '../../services/index';
-import UserListComponent from './UserListComponent';
+import { getFichajesService } from '../../services/index';
 
-function GetFichajesComponent({ userId }) {
+function FichajesComponent({ userId }) {
   const [fichajes, setFichajes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Obtener el token del usuario desde el almacenamiento local
-    const userToken = JSON.parse(localStorage.getItem("userToken"));
-
-    // Llamar al servicio para obtener el historial de fichajes
-    async function fetchFichajes() {
+    const fetchFichajes = async () => {
       try {
+        // Obtener el token de sesión desde localStorage
+        const sessionData = JSON.parse(localStorage.getItem('session'));
+        const userToken = sessionData?.token;
+
+        if (!userToken) {
+          setError('No se encontró el token de sesión en localStorage.');
+          setLoading(false);
+          return;
+        }
+
+        // Llamar al servicio para obtener el historial de fichajes
         const fetchedFichajes = await getFichajesService(userId, userToken);
-        setFichajes(fetchedFichajes);
+        // Ordenar los fichajes por user_id antes de establecerlos en el estado
+        const sortedFichajes = fetchedFichajes.sort((a, b) => a.user_id - b.user_id);
+        setFichajes(sortedFichajes);
         setLoading(false);
       } catch (err) {
         setError(err.message);
         setLoading(false);
+        console.error('Error al obtener fichajes:', err);
       }
-    }
+    };
 
-    // Llamar al servicio para obtener los detalles del usuario
-    async function fetchUserDetails() {
-      try {
-        const userDetails = await getUserByIdService(userId, userToken);
-        setUser(userDetails);
-      } catch (error) {
-        console.error("Error al obtener detalles del usuario:", error);
-      }
-    }
-
-    if (userToken) {
-      fetchFichajes();
-      fetchUserDetails();
-    }
+    fetchFichajes();
   }, [userId]);
 
-  // Función para formatear la fecha en un formato legible
-  function formatFecha(fecha) {
-    const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
-    return new Date(fecha).toLocaleString('es-ES', options);
-  }
+  // Agrupar los fichajes por día
+  const groupedFichajes = fichajes.reduce((groups, fichaje) => {
+    const date = new Date(fichaje.time).toLocaleDateString();
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(fichaje);
+    return groups;
+  }, {});
+
+  // Estado para controlar si un grupo de fichajes está expandido o contraído
+  const [expanded, setExpanded] = useState({});
+
+  // Función para alternar la expansión de un grupo de fichajes
+  const toggleExpansion = (date) => {
+    setExpanded((prevState) => ({
+      ...prevState,
+      [date]: !prevState[date],
+    }));
+  };
+
+  // Estado para controlar si el historial está expandido o contraído
+  const [historialExpanded, setHistorialExpanded] = useState(false);
 
   return (
-    <div>
-      <h2>Historial de Fichajes</h2>
-      {loading ? (
-        <p>Cargando...</p>
-      ) : error ? (
-        <p>Error: {error}</p>
-      ) : (
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <h2
+        onClick={() => setHistorialExpanded(!historialExpanded)}
+        className="text-3xl font-bold mb-6 cursor-pointer text-blue-600"
+      >
+        Historial de Fichajes{' '}
+        {historialExpanded ? '▼' : '▶'}
+      </h2>
+      {historialExpanded && (
         <>
-          {user ? (
+          {loading ? (
+            <p className="text-gray-500">Cargando...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
             <div>
-              <h3>Detalles del Usuario</h3>
-              {/* Muestra el nombre del usuario en esta sección */}
-              <p>Nombre del Usuario: {user.name}</p>
+              {Object.keys(groupedFichajes).map((date) => (
+                <div key={date} className="mb-6">
+                  <button
+                    onClick={() => toggleExpansion(date)}
+                    className="text-xl font-semibold mb-2 cursor-pointer text-blue-500"
+                  >
+                    {date}{' '}
+                    {expanded[date] ? '▼' : '▶'}
+                  </button>
+                  {expanded[date] && (
+                    <table className="table-auto w-full text-left whitespace-no-wrap">
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-2">Empleado</th>
+                          <th className="px-4 py-2">Tipo</th>
+                          <th className="px-4 py-2">Hora</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {groupedFichajes[date].map((fichaje) => (
+                          <tr key={fichaje.id} className="text-gray-600">
+                            <td className="border px-4 py-2">{fichaje.user_id}</td>
+                            <td className="border px-4 py-2">{fichaje.type.toLowerCase() === 'entry' ? 'entrada' : fichaje.type.toLowerCase() === 'exit' ? 'salida' : fichaje.type}</td>
+                            <td className="border px-4 py-2">{new Date(fichaje.time).toLocaleTimeString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              ))}
             </div>
-          ) : null}
-         <ul>
-  {fichajes.map((fichaje) => (
-    <li key={fichaje.id}>
-      {/* Muestra el nombre del usuario en lugar del ID */}
-      {user ? `Usuario ${user.name}` : ''} - {fichaje.type} - {formatFecha(fichaje.time)}
-    </li>
-  ))}
-</ul>
-
+          )}
         </>
       )}
     </div>
   );
 }
 
-export default GetFichajesComponent;
+export default FichajesComponent;
+
