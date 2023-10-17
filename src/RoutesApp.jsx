@@ -15,8 +15,8 @@ const RoutesApp = () => {
 
 
 
-      <Route path="/transfers" element={<UserPage />} />
-      <Route path="/user/:userId" element={<UserInfoComponent />} />
+      <Route path="/transfers/:userId" element={<UserPage />} />
+      
 
     </Routes>
   );

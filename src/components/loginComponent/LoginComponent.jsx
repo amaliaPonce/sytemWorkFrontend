@@ -43,9 +43,10 @@ function LoginComponent() {
             token: data.token,
             id: data.id,
             name: data.name,
+            
           })
         );
-        navigate("/transfers");
+navigate(`/transfers/${data.id}`);
       } else {
         setError(data.message || "Error al iniciar sesión");
       }

@@ -156,14 +156,17 @@ export const getUserByIdService = async (userId, userToken) => {
       }
     );
 
+    if (!response.ok) {
+      console.error("getUserByIdService: Response Error:", response.statusText);
+      throw new Error("Error al obtener los detalles del usuario: " + response.statusText);
+    }
 
     const json = await response.json();
 
-    if (!response.ok) {
-      console.error("getUserByIdService: Response Error:", json.message);
-      throw new Error(json.message);
+    if (!json || Object.keys(json).length === 0) {
+      console.error("getUserByIdService: Response Error: Respuesta vacía.");
+      throw new Error("Error al obtener los detalles del usuario: Respuesta vacía");
     }
-
 
     return json.data;
   } catch (error) {
@@ -171,6 +174,7 @@ export const getUserByIdService = async (userId, userToken) => {
     throw new Error("Error al obtener los detalles del usuario: " + error.message);
   }
 };
+
 
 
 export const registerService = async (name, email, password) => {

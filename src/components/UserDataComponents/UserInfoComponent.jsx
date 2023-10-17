@@ -70,7 +70,7 @@ function UserInfoComponent() {
 
       if (response.message === "Cuenta de usuario eliminada con éxito") {
         console.log("Usuario eliminado con éxito.");
-        navigate("/transfers"); // Redirige a la página "transfers" después de eliminar.
+        navigate("/transfers/:userId"); // Redirige a la página "transfers" después de eliminar.
       } else {
         console.error("Error al eliminar el usuario:", response.message);
       }
