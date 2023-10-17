@@ -7,16 +7,14 @@ import UserListComponent from '../../components/UserDataComponents/UserListCompo
 import { useUserList } from "../../hooks/useUserList"; 
 import GetFichajesComponent from '../../components/UserDataComponents/GetFichajesComponent';
 import GetEstado from '../../components/UserDataComponents/GetEstado'
+import Navbar from '../../components/navbar/Navbar';
 const UserPage = () => {
   const { users, loading, error } = useUserList();
 
 
   return (
     <>
-      <CheckInComponent  />
-      <CheckOutComponent />
-      <UserListComponent users={users} loading={loading} error={error} />
-      {/* <GetFichajesComponent users={users} loading={loading} error={error} /> */}
+    <Navbar />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AppContext } from "./AppProvider";
+import { AppContext } from "../../context/AppContext";
 const Logout = () => {
     const { logout } = useContext(AppContext);
   
@@ -8,7 +8,7 @@ const Logout = () => {
     };
   
     return (
-      <button onClick={handleLogout}>Logout</button>
+      <button onClick={handleLogout}>Log out</button>
     );
   };
   

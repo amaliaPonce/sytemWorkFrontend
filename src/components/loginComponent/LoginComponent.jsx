@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 import { loginService } from "../../services/index";
+import { Link } from "react-router-dom";
 
 function LoginComponent() {
   const navigate = useNavigate();
@@ -35,11 +36,15 @@ function LoginComponent() {
           token: data.token,
           id: data.id,
         });
-        localStorage.setItem("session", JSON.stringify({
-          userRole: data.userRole,
-          token: data.token,
-          id: data.id,
-        }));
+        localStorage.setItem(
+          "session",
+          JSON.stringify({
+            userRole: data.userRole,
+            token: data.token,
+            id: data.id,
+            name: data.name,
+          })
+        );
         navigate("/transfers");
       } else {
         setError(data.message || "Error al iniciar sesión");
@@ -64,43 +69,65 @@ function LoginComponent() {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto bg-blue-200 rounded-lg shadow-lg">
-      <h2 className="text-4xl font-bold text-blue-700 mb-4 text-center">Iniciar Sesión</h2>
-      <form onSubmit={handleLogin}>
-        <div className="mb-4">
-          <label htmlFor="id" className="block text-sm font-medium text-gray-700 mb-2">Número de empleado:</label>
-          <input
-            id="id"
-            type="text"
-            value={id}
-            required
-            onChange={(e) => setId(e.target.value)}
-            autoComplete="username"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-          />
+    <div className="">
+      <div className="p-4">
+        <div className="bg-white p-10 pt-40 pb-40 rounded-lg shadow-xl text-black w-96 mx-auto my-auto">
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold">Inicia Sesión</h2>
+            <p className="text-custom-blue text-xl mt-4">
+              ¡Nos encanta volver a verte!
+            </p>
+          </section>
+
+          <form onSubmit={handleLogin} className="mt-4">
+            <div className="mb-4">
+              <label htmlFor="id" className="text-black">
+                Tu número de empleado:
+              </label>
+              <input
+                id="id"
+                type="text"
+                value={id}
+                required
+                onChange={(e) => setId(e.target.value)}
+                autoComplete="username"
+                className="w-full p-2 rounded border bg-white text-black focus:border-black focus:ring-2 focus:ring-black"
+                placeholder="Por ejemplo: 1"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="password" className="text-black">
+                Contraseña:
+              </label>
+              <input
+                type="password"
+                value={password}
+                required
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                className="w-full p-2 rounded border bg-white text-black"
+                placeholder="******"
+              />
+            </div>
+            <div className="mb-4">
+              <button
+                type="submit"
+                className="w-full bg-black text-white p-2 rounded-lg hover:bg-custom-blue"
+              >
+                {isLoading ? "Cargando..." : "INICIA SESIÓN"}
+              </button>
+              <p className="mt-4 text-center text-custom-blue">
+                ¿Nuevo puesto de trabajo?{" "}
+                <Link to="/register" style={{ fontWeight: "bold" }}>
+                  Regístrate
+                </Link>
+              </p>
+            </div>
+            {error && <p className="text-red-500">{error}</p>}
+            {isLoading && <p className="text-black">Cargando...</p>}
+          </form>
         </div>
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-          />
-        </div>
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-          >
-            {isLoading ? "Cargando..." : "Iniciar Sesión"}
-          </button>
-        </div>
-        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
-        {isLoading && <p className="text-center mt-2">Cargando...</p>}
-      </form>
+      </div>
     </div>
   );
 }
