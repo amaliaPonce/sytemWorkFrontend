@@ -23,15 +23,12 @@ const Navbar = () => {
   }, [userInfo]);
 
   const handleLogout = () => {
-    // Llama a logout() para realizar el proceso de cierre de sesión
     logout();
   
-    // Limpia los datos de sesión en sessionStorage
     sessionStorage.removeItem("userRole");
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("id");
     
-    // Redirige al usuario a la página de inicio de sesión o donde desees
     navigate("/");
   }
   

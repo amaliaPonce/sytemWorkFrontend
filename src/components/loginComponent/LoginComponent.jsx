@@ -46,7 +46,6 @@ function LoginComponent() {
           name: data.name,
         }));
 
-        // Redirige al usuario a la página de UserPage con el userId
         navigate(`/transfers/${data.id}`);
       } else {
         setError(data.message || "Error al iniciar sesión");

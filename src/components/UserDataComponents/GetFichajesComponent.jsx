@@ -9,7 +9,6 @@ function FichajesComponent({ userId }) {
   useEffect(() => {
     const fetchFichajes = async () => {
       try {
-        // Obtener el token de sesión desde localStorage
         const sessionData = JSON.parse(localStorage.getItem('session'));
         const userToken = sessionData?.token;
 
@@ -19,9 +18,7 @@ function FichajesComponent({ userId }) {
           return;
         }
 
-        // Llamar al servicio para obtener el historial de fichajes
         const fetchedFichajes = await getFichajesService(userId, userToken);
-        // Ordenar los fichajes por user_id antes de establecerlos en el estado
         const sortedFichajes = fetchedFichajes.sort((a, b) => a.user_id - b.user_id);
         setFichajes(sortedFichajes);
         setLoading(false);
@@ -35,7 +32,6 @@ function FichajesComponent({ userId }) {
     fetchFichajes();
   }, [userId]);
 
-  // Agrupar los fichajes por día
   const groupedFichajes = fichajes.reduce((groups, fichaje) => {
     const date = new Date(fichaje.time).toLocaleDateString();
     if (!groups[date]) {
@@ -45,10 +41,8 @@ function FichajesComponent({ userId }) {
     return groups;
   }, {});
 
-  // Estado para controlar si un grupo de fichajes está expandido o contraído
   const [expanded, setExpanded] = useState({});
 
-  // Función para alternar la expansión de un grupo de fichajes
   const toggleExpansion = (date) => {
     setExpanded((prevState) => ({
       ...prevState,
@@ -56,7 +50,6 @@ function FichajesComponent({ userId }) {
     }));
   };
 
-  // Estado para controlar si el historial está expandido o contraído
   const [historialExpanded, setHistorialExpanded] = useState(false);
 
   return (

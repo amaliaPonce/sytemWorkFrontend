@@ -1,6 +1,5 @@
 import React from 'react';
-import './QuotesComponent.css'; // Importa tu archivo CSS
-
+import './QuotesComponent.css';
 const QuotesComponent = () => {
   const frasesMotivadoras = [
     "El éxito es la suma de pequeños esfuerzos repetidos día tras día.",

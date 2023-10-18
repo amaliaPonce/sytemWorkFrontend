@@ -33,7 +33,6 @@ function EstadoEmpleado({ userId }) {
     fetchEstado();
   }, [userId]);
 
-  // Clase condicional para el color del texto
   const textColorClass = estado === 'El usuario está dentro' ? 'text-green-500' : 'text-red-500';
 
   return (
