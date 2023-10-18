@@ -2,6 +2,7 @@ import React from "react";
 import { AppProvider } from "../../context/AppContext";
 import RegisterComponent from "../../components/registerComponent/RegisterComponent";
 import fotoTrabajo1 from "../../assets/fotoTrabajo1.jpg";
+
 function HomePage() {
   return (
     <AppProvider>

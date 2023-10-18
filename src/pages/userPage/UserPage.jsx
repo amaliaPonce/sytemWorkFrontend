@@ -8,13 +8,13 @@ import { useUserList } from "../../hooks/useUserList";
 import UserListComponent from "../../components/UserDataComponents/UserListComponent";
 import "../../components/UserDataComponents/UserList.css";
 import 'font-awesome/css/font-awesome.min.css';
-import useUser from "../../hooks/useUser"; // Importa el hook useUser
+import useUser from "../../hooks/useUser";
 
 const UserPage = () => {
   const { user } = useContext(AppContext);
   const { users, error, loading } = useUserList();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { userInfo, loading: userLoading } = useUser(); // Usa el hook useUser para cargar los datos del usuario
+  const { userInfo, loading: userLoading } = useUser();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -24,8 +24,7 @@ const UserPage = () => {
     setIsModalOpen(false);
   };
 
-  // Verifica si el usuario tiene el rol de administrador
-  const isAdmin = userInfo && userInfo.userRole === "admin"; // Usamos userInfo para verificar el rol
+  const isAdmin = userInfo && userInfo.userRole === "admin";
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -44,7 +43,7 @@ const UserPage = () => {
         <QuotesComponent />
       </div>
 
-      {userInfo && !userLoading && (  // Verifica que userInfo se haya cargado y que userLoading sea false
+      {userInfo && !userLoading && (
         isAdmin && (
           <div className="open-modal" onClick={openModal}>
             <i className="fa fa-plus" id="plus-icon"></i>

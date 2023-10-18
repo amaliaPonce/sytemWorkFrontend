@@ -1,8 +1,7 @@
 import React from "react";
 import { AppProvider } from "../../context/AppContext";
 import LoginComponent from "../../components/loginComponent/LoginComponent";
-import RegisterComponent from "../../components/registerComponent/RegisterComponent";
-import fotoTrabajo1 from "../../assets/fotoTrabajo1.jpg"; // Importa la imagen
+import fotoTrabajo1 from "../../assets/fotoTrabajo1.jpg";
 
 function HomePage() {
   return (

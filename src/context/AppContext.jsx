@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 
 export const AppContext = createContext();
 

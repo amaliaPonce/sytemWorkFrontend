@@ -28,7 +28,10 @@ const UserListComponent = ({ users, loading, error }) => {
       <ul className="list-none">
         {users.map((user) => (
           <li key={user.id} className="mb-4 p-4 border rounded shadow">
-            <Link to={`/user/${user.id}`} className="text-blue-500 hover:text-blue-700">
+            <Link
+              to={`/user/${user.id}`}
+              className="text-blue-500 hover:text-blue-700"
+            >
               <strong className="font-bold">Número de empleado: </strong>
               {user.id}
             </Link>{" "}
