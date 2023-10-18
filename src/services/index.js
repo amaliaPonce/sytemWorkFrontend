@@ -9,16 +9,18 @@ export const getEstadoService = async (userId, userToken) => {
     if (latestRecord && latestRecord.state) {
       const estadoMinusculas = latestRecord.state.toLowerCase();
 
-      if (estadoMinusculas === 'inside') {
-        return 'El usuario está dentro';
-      } else if (estadoMinusculas === 'outside') {
-        return 'El usuario está fuera';
+      if (estadoMinusculas === "inside") {
+        return "El usuario está dentro";
+      } else if (estadoMinusculas === "outside") {
+        return "El usuario está fuera";
       }
     }
 
-    return 'Estado desconocido';
+    return "Estado desconocido";
   } catch (error) {
-    throw new Error("Error al obtener el estado actual del empleado: " + error.message);
+    throw new Error(
+      "Error al obtener el estado actual del empleado: " + error.message
+    );
   }
 };
 
@@ -45,11 +47,11 @@ export const getLatestRecordService = async (userId, userToken) => {
 
     return await response.json();
   } catch (error) {
-    throw new Error("Error al obtener el registro más reciente: " + error.message);
+    throw new Error(
+      "Error al obtener el registro más reciente: " + error.message
+    );
   }
 };
-
-
 
 export const getFichajesService = async (userId, userToken) => {
   try {
@@ -63,7 +65,6 @@ export const getFichajesService = async (userId, userToken) => {
       }
     );
 
-
     const json = await response.json();
 
     if (!response.ok) {
@@ -71,11 +72,12 @@ export const getFichajesService = async (userId, userToken) => {
       throw new Error(json.message);
     }
 
-
     return json.fichajes;
   } catch (error) {
     console.error("getFichajesService: Error Occurred:", error.message);
-    throw new Error("Error al obtener el historial de fichajes: " + error.message);
+    throw new Error(
+      "Error al obtener el historial de fichajes: " + error.message
+    );
   }
 };
 
@@ -91,14 +93,12 @@ export const deleteUserByIdService = async (userId, userToken) => {
       }
     );
 
-
     const json = await response.json();
 
     if (!response.ok) {
       console.error("deleteUserByIdService: Response Error:", json.message);
       throw new Error(json.message);
     }
-
 
     return json;
   } catch (error) {
@@ -120,7 +120,6 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
       }
     );
 
-
     if (!response.ok) {
       const json = await response.json();
       console.error("updateUserDetailsService: Response Error:", json.message);
@@ -132,10 +131,11 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
     return json;
   } catch (error) {
     console.error("updateUserDetailsService: Error Occurred:", error.message);
-    throw new Error("Error al actualizar los detalles del usuario: " + error.message);
+    throw new Error(
+      "Error al actualizar los detalles del usuario: " + error.message
+    );
   }
 };
-
 
 export const getUserByIdService = async (id, userToken) => {
   try {
@@ -151,37 +151,46 @@ export const getUserByIdService = async (id, userToken) => {
     );
 
     if (!response.ok) {
-      console.error("getUserByIdService: Response Error:", response.status, response.statusText);
-      throw new Error("Error al obtener los detalles del usuario: " + response.statusText);
+      console.error(
+        "getUserByIdService: Response Error:",
+        response.status,
+        response.statusText
+      );
+      throw new Error(
+        "Error al obtener los detalles del usuario: " + response.statusText
+      );
     }
 
     const json = await response.json();
 
     if (!json || Object.keys(json).length === 0) {
       console.error("getUserByIdService: Response Error: Respuesta vacía.");
-      throw new Error("Error al obtener los detalles del usuario: Respuesta vacía");
+      throw new Error(
+        "Error al obtener los detalles del usuario: Respuesta vacía"
+      );
     }
 
     return json.data;
   } catch (error) {
     console.error("getUserByIdService: Error Occurred:", error.message);
-    throw new Error("Error al obtener los detalles del usuario: " + error.message);
+    throw new Error(
+      "Error al obtener los detalles del usuario: " + error.message
+    );
   }
 };
 
-
-
-
-
 export const registerService = async (name, email, password) => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/register`, {
-      method: "POST",
-      body: JSON.stringify({ name, email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/register`,
+      {
+        method: "POST",
+        body: JSON.stringify({ name, email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const json = await response.json(); // Parse the response data
 
@@ -194,6 +203,7 @@ export const registerService = async (name, email, password) => {
     throw new Error("Error en el registro: " + error.message);
   }
 };
+
 export const loginService = async (body) => {
   try {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
@@ -208,7 +218,9 @@ export const loginService = async (body) => {
 
     if (!response.ok) {
       if (errorData.message === "Credenciales inválidas.") {
-        throw new Error("Credenciales inválidas. Por favor, verifica tu ID y contraseña.");
+        throw new Error(
+          "Credenciales inválidas. Por favor, verifica tu ID y contraseña."
+        );
       } else {
         throw new Error(`Error en la solicitud: ${errorData.message}`);
       }
@@ -220,7 +232,6 @@ export const loginService = async (body) => {
   }
 };
 
-
 export const registerCheckinService = async (userToken) => {
   try {
     // Verificar que userToken no sea nulo o indefinido
@@ -228,15 +239,17 @@ export const registerCheckinService = async (userToken) => {
       throw new Error("Token de usuario faltante");
     }
 
-
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/checkin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${userToken}`,
-      },
-      body: JSON.stringify({}),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/checkin`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userToken}`,
+        },
+        body: JSON.stringify({}),
+      }
+    );
 
     const errorData = await response.json();
 
@@ -256,14 +269,17 @@ export const registerCheckoutService = async (userToken) => {
       throw new Error("Token de usuario faltante");
     }
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/checkout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${userToken}`,
-      },
-      body: JSON.stringify({}),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/checkout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userToken}`,
+        },
+        body: JSON.stringify({}),
+      }
+    );
 
     const errorData = await response.json();
 
@@ -305,4 +321,3 @@ export const listUsersService = async (userToken) => {
     throw new Error("Error al obtener la lista de usuarios: " + error.message);
   }
 };
-

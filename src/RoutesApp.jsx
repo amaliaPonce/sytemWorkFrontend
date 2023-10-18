@@ -1,10 +1,10 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import HomePage from './pages/homePage/HomePage';
-import UserPage from './pages/userPage/UserPage';
-import RegisterPage from './pages/homePage/RegisterPage';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/homePage/HomePage";
+import UserPage from "./pages/userPage/UserPage";
+import RegisterPage from "./pages/homePage/RegisterPage";
 
-import UserInfoComponent from './components/UserDataComponents/UserInfoComponent';
+import UserInfoComponent from "./components/UserDataComponents/UserInfoComponent";
 
 const RoutesApp = () => {
   return (
@@ -16,6 +16,5 @@ const RoutesApp = () => {
     </Routes>
   );
 };
-
 
 export default RoutesApp;
