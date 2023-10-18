@@ -1,49 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { updateUserDetailsService, deleteUserByIdService } from "../../services/index";
+import { updateUserDetailsService, deleteUserByIdService, getUserByIdService } from "../../services/index"; // Añade getUserByIdService
 import useUser from "../../hooks/useUser";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import EstadoEmpleado from '../UserDataComponents/GetEstado'
+import EstadoEmpleado from '../UserDataComponents/GetEstado';
 
 function UserInfoComponent() {
   const { userId } = useParams();
   const userToken = JSON.parse(localStorage.getItem("userToken"));
+  const navigate = useNavigate();
 
-  const {
-    userInfo,
-  } = useUser(userId, userToken);
-
-  const [editedUserData, setEditedUserData] = useState({
-    username: "",
-    name: "",
-    email: "",
-    userRole: "",
-    profile_photo: "",
-  });
+  const [editedUserData, setEditedUserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const navigate = useNavigate(); // Obtén la función de navegación
-
-  // Agrega un efecto para cargar los datos del usuario cuando el componente se monte
   useEffect(() => {
-    if (userInfo) {
-      setEditedUserData(userInfo);
+    async function fetchUserData() {
+      try {
+        const sessionData = JSON.parse(localStorage.getItem("session"));
+        const token = sessionData ? sessionData.token : null;
+  
+        if (!token) {
+          console.error("Token de usuario no encontrado en el localStorage.");
+          return;
+        }
+  
+        const userData = await getUserByIdService(userId, token);
+  
+        if (Array.isArray(userData) && userData.length > 0) {
+          setEditedUserData(userData[0]);
+          console.log(userData[0]);
+        } else {
+          console.error("No se encontraron detalles de usuario.");
+        }
+      } catch (error) {
+        console.error("Error al obtener los detalles del usuario:", error);
+      }
     }
-  }, [userInfo]);
+  
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]);
+  
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
-    // Extraer el nombre del archivo y asignarlo a editedUserData.profile_photo
-    if (file) {
-      setEditedUserData((prevData) => ({
-        ...prevData,
-        profile_photo: file.name,
-      }));
-    }
   };
 
   const handleToggleEdit = () => {
@@ -72,7 +75,7 @@ function UserInfoComponent() {
 
       if (response.message === "Cuenta de usuario eliminada con éxito") {
         console.log("Usuario eliminado con éxito.");
-        navigate(`/transfers/${userId}`); // Redirige a la página "transfers" después de eliminar.
+        navigate(`/transfers/${userId}`);
       } else {
         console.error("Error al eliminar el usuario:", response.message);
       }
@@ -95,31 +98,32 @@ function UserInfoComponent() {
 
       if (selectedFile) {
         formData.append("profile_photo", selectedFile);
-        console.log("Archivo a enviar:", selectedFile);
       }
 
       for (const key in editedUserData) {
         formData.append(key, editedUserData[key]);
       }
 
-      // Realizar una solicitud PUT al servidor para actualizar los datos
       const response = await updateUserDetailsService(userId, token, formData);
 
       if (response.message === "Datos de usuario actualizados con éxito") {
         console.log("Cambios guardados con éxito.");
-        setEditedUserData({ ...editedUserData, profile_photo: formData.get("profile_photo") });
-        setIsEditing(false); 
+        setEditedUserData((prevData) => ({
+          ...prevData,
+          profile_photo: selectedFile ? selectedFile.name : prevData.profile_photo,
+        }));
+        setIsEditing(false);
       } else {
         console.error("Error al guardar los cambios:", response.message);
       }
     } catch (error) {
       console.error("Error al guardar los cambios:", error);
     }
-  };
+  }
 
   return (
     <>
-          <Link to={`/transfers/${userId}`}>
+      <Link to={`/transfers/${userId}`}>
         &larr; Volver a UserPage
       </Link>
 
@@ -204,7 +208,7 @@ function UserInfoComponent() {
             </form>
           ) : (
             <div className="space-y-4 text-center">
-              {userInfo ? (
+              {editedUserData ? (
                 <>
                   <div className="text-center">
                     <img

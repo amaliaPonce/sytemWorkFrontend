@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const UserListComponent = ({ users, loading, error }) => {
-  const [showList, setShowList] = useState(false);
   const [userRole, setUserRole] = useState("");
-  
+
   useEffect(() => {
     const sessionData = JSON.parse(localStorage.getItem("session"));
     if (sessionData && sessionData.userRole) {
@@ -17,36 +16,32 @@ const UserListComponent = ({ users, loading, error }) => {
   }
 
   if (userRole !== "admin") {
-    return null;
+    return <div>No tienes permiso para ver esta lista.</div>;
   }
 
   if (error) {
-    return null;
+    return <div>Error: {error}</div>;
   }
 
   return (
     <div className="container mx-auto p-4">
-        <ul className="list-none">
-          {users.map((user) => (
-            <li key={user.id} className="mb-4 p-4 border rounded shadow">
-              <Link
-                to={`/user/${user.id}`}
-                className="text-blue-500 hover:text-blue-700"
-              >
-                {" "}
-                <strong className="font-bold">Número de empleado: </strong>
-                {user.id}
-              </Link>{" "}
-              <br />
-              <strong className="font-bold">Nombre de Usuario: </strong>
-              {user.username} <br />
-              <strong className="font-bold">Nombre: </strong> {user.name} <br />
-              <strong className="font-bold">Email: </strong> {user.email} <br />
-              <strong className="font-bold">Rol de Usuario: </strong>
-              {user.userRole} <br />
-            </li>
-          ))}
-        </ul>
+      <ul className="list-none">
+        {users.map((user) => (
+          <li key={user.id} className="mb-4 p-4 border rounded shadow">
+            <Link to={`/user/${user.id}`} className="text-blue-500 hover:text-blue-700">
+              <strong className="font-bold">Número de empleado: </strong>
+              {user.id}
+            </Link>{" "}
+            <br />
+            <strong className="font-bold">Nombre de Usuario: </strong>
+            {user.username} <br />
+            <strong className="font-bold">Nombre: </strong> {user.name} <br />
+            <strong className="font-bold">Email: </strong> {user.email} <br />
+            <strong className="font-bold">Rol de Usuario: </strong>
+            {user.userRole} <br />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

@@ -137,11 +137,10 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
 };
 
 
-export const getUserByIdService = async (userId, userToken) => {
+export const getUserByIdService = async (id, userToken) => {
   try {
-
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/users/profile/${userId}`,
+      `${import.meta.env.VITE_API_URL}/users/profile/${id}`,
       {
         method: "GET",
         headers: {
@@ -163,13 +162,13 @@ export const getUserByIdService = async (userId, userToken) => {
       throw new Error("Error al obtener los detalles del usuario: Respuesta vacía");
     }
 
-
     return json.data;
   } catch (error) {
     console.error("getUserByIdService: Error Occurred:", error.message);
     throw new Error("Error al obtener los detalles del usuario: " + error.message);
   }
 };
+
 
 
 
