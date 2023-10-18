@@ -18,7 +18,6 @@ export const AppProvider = ({ children }) => {
 
   const login = (loginUser) => {
     setUser(loginUser);
-    console.log("Usuario inició sesión:", loginUser);
   };
 
   const logout = () => {

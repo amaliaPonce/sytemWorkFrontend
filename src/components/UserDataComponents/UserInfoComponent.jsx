@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import { updateUserDetailsService, deleteUserByIdService } from "../../services/index";
 import useUser from "../../hooks/useUser";
 import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import EstadoEmpleado from '../UserDataComponents/GetEstado'
+
 function UserInfoComponent() {
   const { userId } = useParams();
   const userToken = JSON.parse(localStorage.getItem("userToken"));
@@ -22,6 +24,8 @@ function UserInfoComponent() {
   const [isEditing, setIsEditing] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const navigate = useNavigate(); // Obtén la función de navegación
 
   // Agrega un efecto para cargar los datos del usuario cuando el componente se monte
   useEffect(() => {
@@ -54,8 +58,6 @@ function UserInfoComponent() {
     }));
   };
 
-  const navigate = useNavigate();
-
   const handleDeleteUser = async () => {
     try {
       const sessionData = JSON.parse(localStorage.getItem("session"));
@@ -70,7 +72,7 @@ function UserInfoComponent() {
 
       if (response.message === "Cuenta de usuario eliminada con éxito") {
         console.log("Usuario eliminado con éxito.");
-        navigate("/transfers/:userId"); // Redirige a la página "transfers" después de eliminar.
+        navigate(`/transfers/${userId}`); // Redirige a la página "transfers" después de eliminar.
       } else {
         console.error("Error al eliminar el usuario:", response.message);
       }
@@ -78,7 +80,6 @@ function UserInfoComponent() {
       console.error("Error al eliminar el usuario:", error);
     }
   };
-  
 
   const handleSaveChanges = async () => {
     try {
@@ -118,6 +119,10 @@ function UserInfoComponent() {
 
   return (
     <>
+          <Link to={`/transfers/${userId}`}>
+        &larr; Volver a UserPage
+      </Link>
+
       <section className="h-screen flex items-center justify-center bg-gray-100">
         <div className="max-w-xl w-full p-4 bg-white rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4 text-center">Detalles del Usuario</h2>

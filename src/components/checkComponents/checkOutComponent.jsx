@@ -33,10 +33,7 @@ function CheckOutComponent() {
 
       setTimeout(() => {
         setShowSuccessMessage(false);
-
-        if (sessionData?.userRole === "user") {
-          navigate("/");
-        }
+        
       }, 1000);
     } catch (error) {
       setError("Error al registrar el check-out: " + error.message);

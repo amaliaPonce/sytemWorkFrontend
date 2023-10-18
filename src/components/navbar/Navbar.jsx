@@ -47,14 +47,12 @@ const Navbar = () => {
         </h1>
       </div>
 
-      {user.id && (
         <button
           onClick={handleLogout}
           className="text-custom-blue cursor-pointer ml-2 md:mr-8"
         >
           Cerrar sesión
         </button>
-      )}
     </nav>
   );
 };

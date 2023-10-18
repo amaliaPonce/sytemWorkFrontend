@@ -35,39 +35,34 @@ function LoginComponent() {
           userRole: data.userRole,
           token: data.token,
           id: data.id,
+          name: data.name,
         });
-        localStorage.setItem(
-          "session",
-          JSON.stringify({
-            userRole: data.userRole,
-            token: data.token,
-            id: data.id,
-            name: data.name,
-            
-          })
-        );
-navigate(`/transfers/${data.id}`);
+
+        // Almacena el objeto user en localStorage
+        localStorage.setItem("session", JSON.stringify({
+          userRole: data.userRole,
+          token: data.token,
+          id: data.id,
+          name: data.name,
+        }));
+
+        // Redirige al usuario a la página de UserPage con el userId
+        navigate(`/transfers/${data.id}`);
       } else {
         setError(data.message || "Error al iniciar sesión");
       }
     } catch (error) {
       if (error.message.includes("Network Error")) {
-        setError(
-          "Error de conexión. Por favor, verifica tu conexión a Internet."
-        );
+        setError("Error de conexión. Por favor, verifica tu conexión a Internet.");
       } else if (error.message.includes("credenciales inválidas")) {
-        setError(
-          "Credenciales incorrectas. Por favor, verifica tu ID y contraseña."
-        );
+        setError("Credenciales incorrectas. Por favor, verifica tu ID y contraseña.");
       } else {
-        setError(
-          "Ha ocurrido un error al iniciar sesión. Por favor, inténtalo de nuevo más tarde."
-        );
+        setError("Ha ocurrido un error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
       }
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
     <div className="">
@@ -113,7 +108,7 @@ navigate(`/transfers/${data.id}`);
             <div className="mb-4">
               <button
                 type="submit"
-                className="w-full bg-black text-white p-2 rounded-lg hover:bg-custom-blue"
+                className="w-full bg-black text-white p-2 rounded-lg hover-bg-custom-blue"
               >
                 {isLoading ? "Cargando..." : "INICIA SESIÓN"}
               </button>

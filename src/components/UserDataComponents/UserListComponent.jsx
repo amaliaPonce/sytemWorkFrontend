@@ -26,13 +26,6 @@ const UserListComponent = ({ users, loading, error }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <button
-        onClick={() => setShowList(!showList)}
-        className="text-2xl font-bold mb-4 bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Lista de Usuarios
-      </button>
-      {showList && (
         <ul className="list-none">
           {users.map((user) => (
             <li key={user.id} className="mb-4 p-4 border rounded shadow">
@@ -54,7 +47,6 @@ const UserListComponent = ({ users, loading, error }) => {
             </li>
           ))}
         </ul>
-      )}
     </div>
   );
 };

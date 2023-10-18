@@ -41,7 +41,6 @@ function CheckInComponent() {
       setIsLoading(false);
     }
   };
-  console.log('Estado de isCheckedIn en CheckInComponent:', isCheckedIn);
 
   return (
     <div>

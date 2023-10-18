@@ -63,7 +63,6 @@ export const getFichajesService = async (userId, userToken) => {
       }
     );
 
-    console.log("getFichajesService: Response Status Code:", response.status);
 
     const json = await response.json();
 
@@ -72,7 +71,6 @@ export const getFichajesService = async (userId, userToken) => {
       throw new Error(json.message);
     }
 
-    console.log("getFichajesService: Fichajes Received:", json.fichajes);
 
     return json.fichajes;
   } catch (error) {
@@ -93,7 +91,6 @@ export const deleteUserByIdService = async (userId, userToken) => {
       }
     );
 
-    console.log("deleteUserByIdService: Response Status Code:", response.status);
 
     const json = await response.json();
 
@@ -102,7 +99,6 @@ export const deleteUserByIdService = async (userId, userToken) => {
       throw new Error(json.message);
     }
 
-    console.log("deleteUserByIdService: User Deleted:", json.message);
 
     return json;
   } catch (error) {
@@ -124,7 +120,6 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
       }
     );
 
-    console.log("updateUserDetailsService: Response Status Code:", response.status);
 
     if (!response.ok) {
       const json = await response.json();
@@ -133,7 +128,6 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
     }
 
     const json = await response.json();
-    console.log("updateUserDetailsService: Response Data:", json);
 
     return json;
   } catch (error) {
@@ -145,6 +139,7 @@ export const updateUserDetailsService = async (userId, userToken, formData) => {
 
 export const getUserByIdService = async (userId, userToken) => {
   try {
+
     const response = await fetch(
       `${import.meta.env.VITE_API_URL}/users/profile/${userId}`,
       {
@@ -157,7 +152,7 @@ export const getUserByIdService = async (userId, userToken) => {
     );
 
     if (!response.ok) {
-      console.error("getUserByIdService: Response Error:", response.statusText);
+      console.error("getUserByIdService: Response Error:", response.status, response.statusText);
       throw new Error("Error al obtener los detalles del usuario: " + response.statusText);
     }
 
@@ -168,12 +163,14 @@ export const getUserByIdService = async (userId, userToken) => {
       throw new Error("Error al obtener los detalles del usuario: Respuesta vacía");
     }
 
+
     return json.data;
   } catch (error) {
     console.error("getUserByIdService: Error Occurred:", error.message);
     throw new Error("Error al obtener los detalles del usuario: " + error.message);
   }
 };
+
 
 
 
@@ -208,9 +205,6 @@ export const loginService = async (body) => {
       body: JSON.stringify(body),
     });
 
-    // Añade este código para mostrar los encabezados de la respuesta
-    console.log("Response Headers:", response.headers);
-
     const errorData = await response.json();
 
     if (!response.ok) {
@@ -235,7 +229,6 @@ export const registerCheckinService = async (userToken) => {
       throw new Error("Token de usuario faltante");
     }
 
-    console.log("Token JWT enviado al servidor:", userToken);
 
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/checkin`, {
       method: "POST",
@@ -264,8 +257,6 @@ export const registerCheckoutService = async (userToken) => {
       throw new Error("Token de usuario faltante");
     }
 
-    console.log("Token JWT enviado al servidor:", userToken);
-
     const response = await fetch(`${import.meta.env.VITE_API_URL}/api/checkout`, {
       method: "POST",
       headers: {
@@ -291,7 +282,6 @@ export const listUsersService = async (userToken) => {
   if (!userToken) {
     throw new Error("Token de usuario faltante");
   }
-  console.log("Token JWT enviado al servidor:", userToken);
 
   try {
     const response = await fetch(

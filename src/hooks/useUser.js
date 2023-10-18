@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react";
 import { getUserByIdService } from "../services/index";
 
-const useUser = (id) => {
+const useUser = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const sessionData = JSON.parse(localStorage.getItem("session"));
+    const token = sessionData ? sessionData.token : null;
+    const id = sessionData ? sessionData.id : null;
+
+    if (!token || !id) {
+      setError("No se encontró el token o el ID de sesión en localStorage.");
+      setLoading(false);
+      return;
+    }
+
     const loadUser = async () => {
       try {
-        const sessionData = JSON.parse(localStorage.getItem("session"));
-        const token = sessionData ? sessionData.token : null;
-
-        if (!token) {
-          setError("No se encontró el token de sesión en localStorage.");
-          setLoading(false);
-          return;
-        }
-
         setLoading(true);
         const response = await getUserByIdService(id, token);
 
@@ -37,7 +38,7 @@ const useUser = (id) => {
     };
 
     loadUser();
-  }, [id]);
+  }, []);
 
   return { userInfo, error, loading };
 };
