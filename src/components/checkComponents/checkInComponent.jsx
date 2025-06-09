@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCheckInOut } from "../../context/CheckInOutContext";
 import { registerCheckinService } from "../../services/index";
+import { getSession } from "../../utils/session";
 
 function CheckInComponent() {
   const { isCheckedIn, setIsCheckedIn } = useCheckInOut();
@@ -20,7 +21,7 @@ function CheckInComponent() {
     setShowSuccessMessage(false);
 
     try {
-      const sessionData = JSON.parse(localStorage.getItem("session"));
+      const sessionData = getSession();
       const token = sessionData?.token;
 
       if (!token) {

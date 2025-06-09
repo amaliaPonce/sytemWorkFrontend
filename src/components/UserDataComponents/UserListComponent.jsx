@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getSession } from "../../utils/session";
 
 const UserListComponent = ({ users, loading, error }) => {
   const [userRole, setUserRole] = useState("");
 
   useEffect(() => {
-    const sessionData = JSON.parse(localStorage.getItem("session"));
+    const sessionData = getSession();
     if (sessionData && sessionData.userRole) {
       setUserRole(sessionData.userRole);
     }

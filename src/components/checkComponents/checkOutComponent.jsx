@@ -3,6 +3,7 @@ import { Button, Alert } from "react-bootstrap";
 import { useCheckInOut } from "../../context/CheckInOutContext";
 import { registerCheckoutService } from "../../services/index";
 import { useNavigate } from "react-router-dom";
+import { getSession } from "../../utils/session";
 
 function CheckOutComponent() {
   const { isCheckedIn, setIsCheckedIn } = useCheckInOut();
@@ -19,7 +20,7 @@ function CheckOutComponent() {
     setShowSuccessMessage(false);
 
     try {
-      const sessionData = JSON.parse(localStorage.getItem("session"));
+      const sessionData = getSession();
       const token = sessionData?.token;
 
       if (!token) {

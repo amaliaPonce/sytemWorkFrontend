@@ -24,11 +24,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-  
-    sessionStorage.removeItem("userRole");
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("id");
-    
+
     navigate("/");
   }
   

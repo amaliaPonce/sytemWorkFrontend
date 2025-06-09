@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUserByIdService } from "../services/index";
+import { getSession } from "../utils/session";
 
 const useUser = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -7,7 +8,7 @@ const useUser = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const sessionData = JSON.parse(localStorage.getItem("session"));
+    const sessionData = getSession();
     const token = sessionData ? sessionData.token : null;
     const id = sessionData ? sessionData.id : null;
 
