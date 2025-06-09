@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getEstadoService } from '../../services/index';
+import { getSession } from '../../utils/session';
 
 function EstadoEmpleado({ userId }) {
   const [estado, setEstado] = useState('Cargando...');
@@ -8,7 +9,7 @@ function EstadoEmpleado({ userId }) {
   useEffect(() => {
     const fetchEstado = async () => {
       try {
-        const sessionData = JSON.parse(localStorage.getItem("session"));
+        const sessionData = getSession();
         const token = sessionData?.token;
 
         if (!token) {

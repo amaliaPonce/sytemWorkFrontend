@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getFichajesService } from '../../services/index';
+import { getSession } from '../../utils/session';
 
 function FichajesComponent({ userId }) {
   const [fichajes, setFichajes] = useState([]);
@@ -9,7 +10,7 @@ function FichajesComponent({ userId }) {
   useEffect(() => {
     const fetchFichajes = async () => {
       try {
-        const sessionData = JSON.parse(localStorage.getItem('session'));
+        const sessionData = getSession();
         const userToken = sessionData?.token;
 
         if (!userToken) {

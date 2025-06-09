@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { listUsersService } from "../services/index";
+import { getSession } from "../utils/session";
 
 export const useUserList = () => {
   const [users, setUsers] = useState([]);
@@ -9,7 +10,7 @@ export const useUserList = () => {
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const sessionData = JSON.parse(localStorage.getItem("session"));
+        const sessionData = getSession();
         const token = sessionData ? sessionData.token : null;
 
         if (!token) {
@@ -18,13 +19,11 @@ export const useUserList = () => {
         }
 
         setLoading(true);
-        console.log("Loading is set to true");
 
         const response = await listUsersService(token);
 
         if (Array.isArray(response) && response.length > 0) {
           setUsers(response);
-          console.log("Users loaded:", response);
           setError(null);
         } else {
           setError("No se encontraron usuarios.");
@@ -33,7 +32,6 @@ export const useUserList = () => {
         setError("Error al obtener la lista de usuarios: " + error.message);
       } finally {
         setLoading(false);
-        console.log("Loading is set to false");
       }
     };
 

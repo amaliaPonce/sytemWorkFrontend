@@ -1,9 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
+import { getSession, setSession, clearSession } from "../utils/session";
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const initialSessionData = JSON.parse(localStorage.getItem("session")) || {
+  const initialSessionData = getSession() || {
     userRole: null,
     token: null,
     id: null,
@@ -12,7 +13,7 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(initialSessionData);
 
   useEffect(() => {
-    localStorage.setItem("session", JSON.stringify(user));
+    setSession(user);
   }, [user]);
 
   const login = (loginUser) => {
@@ -25,7 +26,7 @@ export const AppProvider = ({ children }) => {
       token: null,
       id: null,
     });
-    console.log("Usuario cerró sesión.");
+    clearSession();
   };
 
   return (

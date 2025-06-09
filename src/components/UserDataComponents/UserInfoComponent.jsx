@@ -5,10 +5,10 @@ import useUser from "../../hooks/useUser";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import EstadoEmpleado from '../UserDataComponents/GetEstado';
+import { getSession } from "../../utils/session";
 
 function UserInfoComponent() {
   const { userId } = useParams();
-  const userToken = JSON.parse(localStorage.getItem("userToken"));
   const navigate = useNavigate();
 
   const [editedUserData, setEditedUserData] = useState(null);
@@ -17,7 +17,7 @@ function UserInfoComponent() {
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const sessionData = JSON.parse(localStorage.getItem("session"));
+        const sessionData = getSession();
         const token = sessionData ? sessionData.token : null;
   
         if (!token) {
@@ -29,7 +29,6 @@ function UserInfoComponent() {
   
         if (Array.isArray(userData) && userData.length > 0) {
           setEditedUserData(userData[0]);
-          console.log(userData[0]);
         } else {
           console.error("No se encontraron detalles de usuario.");
         }
@@ -63,7 +62,7 @@ function UserInfoComponent() {
 
   const handleDeleteUser = async () => {
     try {
-      const sessionData = JSON.parse(localStorage.getItem("session"));
+      const sessionData = getSession();
       const token = sessionData ? sessionData.token : null;
 
       if (!token) {
@@ -74,7 +73,6 @@ function UserInfoComponent() {
       const response = await deleteUserByIdService(userId, token);
 
       if (response.message === "Cuenta de usuario eliminada con éxito") {
-        console.log("Usuario eliminado con éxito.");
         navigate(`/transfers/${userId}`);
       } else {
         console.error("Error al eliminar el usuario:", response.message);
@@ -86,7 +84,7 @@ function UserInfoComponent() {
 
   const handleSaveChanges = async () => {
     try {
-      const sessionData = JSON.parse(localStorage.getItem("session"));
+      const sessionData = getSession();
       const token = sessionData ? sessionData.token : null;
 
       if (!token) {
@@ -107,7 +105,6 @@ function UserInfoComponent() {
       const response = await updateUserDetailsService(userId, token, formData);
 
       if (response.message === "Datos de usuario actualizados con éxito") {
-        console.log("Cambios guardados con éxito.");
         setEditedUserData((prevData) => ({
           ...prevData,
           profile_photo: selectedFile ? selectedFile.name : prevData.profile_photo,
@@ -221,7 +218,7 @@ function UserInfoComponent() {
                   <p><strong>Apellido:</strong> {editedUserData.name}</p>
                   <p><strong>Email:</strong> {editedUserData.email}</p>
                   <p><strong>Rol de usuario:</strong> {editedUserData.userRole}</p>
-                  <EstadoEmpleado userId={userId} userToken={userToken} />
+                  <EstadoEmpleado userId={userId} />
                   <div className="flex justify-center space-x-4 mt-4">
                     <button onClick={handleToggleEdit} className="btn btn-primary flex-grow">
                       Editar
